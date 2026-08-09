@@ -12,7 +12,7 @@
 
 ## Using Psytag
 
-* [Components of Projects](using-psytag/components-of-projects.md)
+* [Main Architecture](using-psytag/main-architecture.md)
 * [Annotation Types](using-psytag/annotation-types.md)
 * [File Management](using-psytag/file-management.md)
 

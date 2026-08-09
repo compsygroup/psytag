@@ -29,7 +29,7 @@ Bitbox calculates displacement statistics relative to a reference frame. It meas
 This function can quantify, for example, how much the mouth corners move relative to their position in a neutral face.
 {% endhint %}
 
-Similar to [kinematics](annotation-types.md) and [smoothness](components-of-projects.md) measures, you can compute these stats for face bounding boxes, head pose, facial landmarks, or body joints (coming soon). When using landmarks, variables are calculated for each landmark separately.
+Similar to [kinematics](annotation-types.md) and [smoothness](main-architecture.md) measures, you can compute these stats for face bounding boxes, head pose, facial landmarks, or body joints (coming soon). When using landmarks, variables are calculated for each landmark separately.
 
 ```python
 from bitbox.biomechanics import relative_motion
