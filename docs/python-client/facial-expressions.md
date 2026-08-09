@@ -42,7 +42,7 @@ lands2D = processor.detect_landmarks()
 exp_global, pose, lands3D = processor.fit()
 ```
 
-Landmarks can be used to compute [biomechanical properties](https://app.gitbook.com/s/lpw2Sut5Wl1gndjb4fEh/using-psytag), [symmetry](symmetry.md), and [social dynamics](/broken/pages/HGNJ6a7rRNCmP3sGamZY) of facial expressions.&#x20;
+Landmarks can be used to compute [biomechanical properties](https://app.gitbook.com/s/lpw2Sut5Wl1gndjb4fEh/psytag-fundementals), [symmetry](symmetry.md), and [social dynamics](/broken/pages/HGNJ6a7rRNCmP3sGamZY) of facial expressions.&#x20;
 
 ### Expression Related Global Deformations
 

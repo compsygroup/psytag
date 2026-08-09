@@ -10,11 +10,11 @@
 * [Roadmap](overview/roadmap.md)
 * [About](overview/about.md)
 
-## Using Psytag
+## Psytag Fundementals
 
-* [Main Architecture](using-psytag/main-architecture.md)
-* [Annotation Types](using-psytag/annotation-types.md)
-* [File Management](using-psytag/file-management.md)
+* [Data Model](psytag-fundementals/data-model.md)
+* [Annotation Types](psytag-fundementals/annotation-types.md)
+* [File Management](psytag-fundementals/file-management.md)
 
 ## Python Client
 
