@@ -21,62 +21,117 @@ layout:
 
 # File Management
 
-<h2 align="center">Expression Diversity</h2>
+<h2 align="center">File Management</h2>
 
-Bitbox measures the diversity of expression-related activations by computing their entropy. If a person frequently activates only a few specific expression signals while rarely engaging others, the resulting entropy value is low.
+The File Management module allows you to programmatically upload local media assets, manage existing files, attach _Sensor Data Structure (SDS)_ metadata, and organize media resources stored on the Psytag server.
 
-This function only accepts [global](getting-started.md#expression-related-global-deformations) or [local](getting-started.md#localized-expression-units) facial expressions. It computes diversity across all expression coefficients together and produces a single score for the entire video and an additional score representing the average frame-wise entropy.
+### Listing and Reading Files
 
-```python
-from bitbox.expressions import diversity
-
-# estimate global expression coefficients
-exp_global, pose, lands3D = processor.fit(normalize=True)
-
-# compute diversity
-diversity_scores = diversity(exp_global, scales=6)
-```
-
-The computation is performed at multiple temporal scales, similar to the multiscale approach used for [Expressivity](project-management.md). This allows Bitbox to capture expressions that unfold at different speeds, such as slow, moderate, or rapid changes in facial activity. A temporal scale represents the approximate duration of an expression event. For example, if the scale is 1 second, the algorithm identifies activations (peaks) in the expression signal that last about one second from start to finish. At each scale, a peak detection algorithm finds these activations, and entropy is then calculated based on their frequencies.&#x20;
-
-Refer to the [Expressivity](project-management.md) section for more details on temporal scales. All options available there—such as multiscale computation, single-scale analysis, and aggregation—are also supported for diversity calculations.
+To list files that you have uploaded or created, use `list_files()` or `FM.list()`. Note that unless you hold system administrator privileges, calling `list_files()` will only return files that your account owns. To list all files associated with a specific project you manage, use `list_files_for_project()` or `FM.list_for_project()`. To fetch details for a single file by its ID, use `read_file()`:
 
 ```python
-# analysis using the original signal with no multiscale analysis
-diversity_scores = diversity(exp_global, scales=None)
+from psytag.managers import FM, list_files_for_project, read_file
 
-# using explicit scales
-diversity_scores = diversity(exp_global, scales=[0.5, 1, 1.5, 2])
+project_id = "650f1a2b3c4d5e6f7a8b9c0a"
 
-# aggregate over scales
-diversity_scores = diversity(exp_global, scales=6, aggregate=True)
+# List files associated with a specific project
+project_files = FM.list_for_project(project_id)
+# project_files = list_files_for_project(project_id)
 
-# setting fps
-diversity_scores = diversity(exp_global, scales=6, fps=30)
+for file in project_files:
+    print(file.id, file.file_path, file.modality, file.data_type, file.subject)
+
+# Read details of a specific file
+if project_files:
+    file_id = project_files[0].id
+    specific_file = FM.read(file_id)
+    # specific_file = read_file(file_id)
+    print(f"Loaded file: {specific_file.file_path}")
 ```
 
-The output is a Pandas `DataFrame` containing two scores for each temporal scale: overall entropy and average frame-wise entropy. Both scores range from 0 to 1.
+### Uploading Files & Adding Metadata
 
-{% hint style="success" %}
-**Overall**: Entropy is calculated using the cumulative frequencies of peaks across the entire signal.\
-**Frame-wise**: Entropy is calculated separately for each frame, and the results are then averaged over time.
+To upload a new media file to the server and create a corresponding `File` database record, use `create_file()` or `FM.create()`. When uploading a file, you can specify standard _Sensor Data Structure (SDS)_ metadata fields as well as custom key-value pairs inside an `extra` dictionary. Adding metadata is highly recommended because these attributes are automatically merged into exported annotation CSV files, making it easy to identify the exact research context for each labeled media file.
 
-Note that overall entropy will always be much higher than the entropy calculated per frame or their average. This is because, at any given frame, only a few expression coefficients are typically active, resulting in low entropy values.
+#### Uploading a Local File
+
+To upload a file from your local machine, pass the metadata dictionary as the first argument and the path to your local media file via the `local_file` parameter:
+
+```python
+from psytag.managers import FM, create_file
+
+file_info = {
+    "file_path": "studyA/session1/clip001.mp4",  # Path where the file will be organized on the server
+    "study": "Parent-Child Interaction Study",   # SDS Study name
+    "subject": "SUBJ_102",                        # SDS Subject identifier
+    "session": 1,                                 # SDS Session number
+    "task": "FreePlay",                           # SDS Behavioral task name
+    "condition": "Baseline",                      # SDS Experimental condition
+    "modality": "video",                          # Media modality (video, audio, or image)
+    "data_type": "mp4",                           # File extension/format
+    "extra": {                                    # Custom key-value pairs
+        "camera_angle": "front",
+        "lighting": "good",
+        "clip_number": 12
+    }
+}
+
+# Upload local file to server and register File record
+new_file = FM.create(file_info, local_file="local_videos/sample_001.mp4")
+# new_file = create_file(file_info, local_file="local_videos/sample_001.mp4")
+```
+
+{% hint style="info" %}
+The path defined by `file_path` field (_e.g._, studyA/session1/clip001.mp4), relative to the root upload directory, will be created automatically. You can give any valid path name.
 {% endhint %}
 
-```
-   scale   overall   frame_wise
-0  0.1     0.556535    0.01963
-1  0.88    0.610186   0.004407
-2  1.66    0.630256   0.002316
-3  2.44    0.616686   0.001854
-4  3.22    0.597459   0.001127
-5   4.0    0.558529   0.000926
-```
+#### Registering Pre-Uploaded Server Files
 
-By default, Bitbox computes diversity using signal magnitudes. In this mode, peak frequencies are weighted by their magnitudes—stronger activations contribute more to the overall count. If you prefer to compute diversity in a binary manner, where only the presence or absence of an activation is considered (without weighting by magnitude), you can disable this behavior by setting `magnitude=False`.
+If media files have already been transferred directly to the server storage directory manually (for instance, via SFTP or batch server scripts), you can omit the `local_file` parameter. Calling `create_file()` with only the metadata dictionary will instantiate a `File` object in the database linking to the existing file path on the server:
 
 ```python
-# compute diversity using binary peaks
-diversity_scores = diversity(exp_global, scales=6, magnitude=False)
+# Register a database entry for a file already located on the server
+server_file = FM.create({
+    "file_path": "studyA/session1/clip002.mp4",
+    "modality": "video",
+    "data_type": "mp4"
+})
 ```
+
+{% hint style="warning" %}
+The path defined by `file_path` field (_e.g._, studyA/session1/clip002.mp4), relative to the root upload directory, must exist on the server.
+{% endhint %}
+
+### Updating File Metadata
+
+To modify metadata or fix fields on an existing file entry, pass the file ID and a dictionary of updated attributes to `update_file()` or `FM.update()`:
+
+```python
+from psytag.managers import FM, update_file
+
+# Update SDS task name and custom extra metadata
+FM.update(new_file.id, {
+    "task": "StructuredPlay",
+    "extra": {
+        "camera_angle": "front",
+        "lighting": "adjusted"
+    }
+})
+# update_file(new_file.id, {"task": "StructuredPlay"})
+```
+
+### Deleting Files
+
+To delete a file entry from the database, pass its ID to `delete_file()` or `FM.delete()`. Note that calling `delete_file()` removes the `File` record from the Psytag database so that it is no longer accessible via the API, but it does not automatically delete the raw media file from the server disk storage.
+
+```python
+from psytag.managers import FM, delete_file
+
+# Delete the file record from database
+FM.delete(new_file.id)
+# delete_file(new_file.id)
+```
+
+{% hint style="danger" %}
+Please use the delete function with caution. Deleting a file is irreversible, and Psytag will not prompt you for confirmation before proceeding.
+{% endhint %}

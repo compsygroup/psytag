@@ -98,3 +98,7 @@ Every primary resource unit in Psytag exposes standardized CRUD methods through 
 * Read (`read_*` / `list_*`): Retrieves a specific resource by its unique ID or returns a list of resources accessible to your account.
 * Update (`update_*`): Accepts a target resource ID and a dictionary of specific fields to modify.
 * Delete (`delete_*`): Permanently removes a resource (or marks it as deleted depending on resource rules).
+
+{% hint style="danger" %}
+Please use the delete function with caution. Deleting a resource is irreversible, and Psytag will not prompt you for confirmation before proceeding.&#x20;
+{% endhint %}
