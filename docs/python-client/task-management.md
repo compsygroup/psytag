@@ -21,62 +21,97 @@ layout:
 
 # Task Management
 
-<h2 align="center">Expression Diversity</h2>
+<h2 align="center">Task Management</h2>
 
-Bitbox measures the diversity of expression-related activations by computing their entropy. If a person frequently activates only a few specific expression signals while rarely engaging others, the resulting entropy value is low.
+The Task Management module allows you to programmatically create, inspect, update, reset, and remove annotation tasks. Tasks link specific media files to projects and serve as the individual assignments presented to annotators.
 
-This function only accepts [global](getting-started.md#expression-related-global-deformations) or [local](getting-started.md#localized-expression-units) facial expressions. It computes diversity across all expression coefficients together and produces a single score for the entire video and an additional score representing the average frame-wise entropy.
+### Listing and Reading Tasks
 
-```python
-from bitbox.expressions import diversity
-
-# estimate global expression coefficients
-exp_global, pose, lands3D = processor.fit(normalize=True)
-
-# compute diversity
-diversity_scores = diversity(exp_global, scales=6)
-```
-
-The computation is performed at multiple temporal scales, similar to the multiscale approach used for [Expressivity](project-management.md). This allows Bitbox to capture expressions that unfold at different speeds, such as slow, moderate, or rapid changes in facial activity. A temporal scale represents the approximate duration of an expression event. For example, if the scale is 1 second, the algorithm identifies activations (peaks) in the expression signal that last about one second from start to finish. At each scale, a peak detection algorithm finds these activations, and entropy is then calculated based on their frequencies.&#x20;
-
-Refer to the [Expressivity](project-management.md) section for more details on temporal scales. All options available there—such as multiscale computation, single-scale analysis, and aggregation—are also supported for diversity calculations.
+To view tasks for a specific project that you manage, use `list_tasks_for_project()` or `TM.list_for_project()`. Note that calling `list_tasks()` without a project ID requires administrator privileges. To fetch details for a single task by its ID, use `read_task()`:
 
 ```python
-# analysis using the original signal with no multiscale analysis
-diversity_scores = diversity(exp_global, scales=None)
+from psytag.managers import TM, list_tasks_for_project, read_task
 
-# using explicit scales
-diversity_scores = diversity(exp_global, scales=[0.5, 1, 1.5, 2])
+project_id = "650f1a2b3c4d5e6f7a8b9c0a"
 
-# aggregate over scales
-diversity_scores = diversity(exp_global, scales=6, aggregate=True)
+# List all tasks assigned to a project
+project_tasks = TM.list_for_project(project_id)
+# project_tasks = list_tasks_for_project(project_id)
 
-# setting fps
-diversity_scores = diversity(exp_global, scales=6, fps=30)
+for task in project_tasks:
+    print(task.id, task.project_id, task.file_id, task.status, task.active)
+
+# Read details of a specific task
+if project_tasks:
+    task_id = project_tasks[0].id
+    specific_task = TM.read(task_id)
+    # specific_task = read_task(task_id)
+    print(f"Loaded task for file ID: {specific_task.file_id}")
 ```
 
-The output is a Pandas `DataFrame` containing two scores for each temporal scale: overall entropy and average frame-wise entropy. Both scores range from 0 to 1.
+### Creating Tasks
 
-{% hint style="success" %}
-**Overall**: Entropy is calculated using the cumulative frequencies of peaks across the entire signal.\
-**Frame-wise**: Entropy is calculated separately for each frame, and the results are then averaged over time.
+To create a new task, prepare a dictionary specifying the target `project_id` and `file_id`, then pass it to `create_task()` or `TM.create()`. By default, a task inherits its instructions and question layout directly from its parent project. However, you can optionally override these properties on a per-task basis if a specific media file requires unique instructions or custom questions.
 
-Note that overall entropy will always be much higher than the entropy calculated per frame or their average. This is because, at any given frame, only a few expression coefficients are typically active, resulting in low entropy values.
+```python
+from psytag.managers import TM, create_task
+
+task_info = {
+    "project_id": "650f1a2b3c4d5e6f7a8b9c0a",  # ID of the parent project
+    "file_id": "650f1a2b3c4d5e6f7a8b9c0b",     # ID of the media File
+    "active": True                             # Set task active status
+}
+
+# Create a standard task
+new_task = TM.create(task_info)
+# new_task = create_task(task_info)
+
+# Optional: Creating a task with custom instructions overriding project defaults
+custom_task_info = {
+    "project_id": "650f1a2b3c4d5e6f7a8b9c0a",
+    "file_id": "650f1a2b3c4d5e6f7a8b9c0c",
+    "active": True,
+    "instructions": "Special note for this video: Pay close attention to audio cues starting at 01:15."
+}
+custom_task = TM.create(custom_task_info)
+```
+
+### Updating Tasks
+
+To change a task's status, toggle its availability, or update custom instructions, pass the task ID and a dictionary of updated attributes to `update_task()` or `TM.update()`:
+
+```python
+from psytag.managers import TM, update_task
+
+# Deactivate a task temporarily
+TM.update(new_task.id, {"active": False})
+# update_task(new_task.id, {"active": False})
+```
+
+### Resetting Tasks
+
+If you need to restart the annotation process for a task—for instance, if annotators misunderstood instructions or completed trial runs—you can reset the task using `reset_task()` or `TM.reset()`. Resetting a task permanently deletes all existing annotations associated with it and reverts the task status back to `created`. The task itself remains in the project.
+
+```python
+from psytag.managers import TM, reset_task
+
+# Reset task annotations and return status to 'created'
+TM.reset(new_task.id)
+# reset_task(new_task.id)
+```
+
+### Deleting Tasks
+
+To permanently delete a task and purge all associated annotations from the system, pass its ID to `delete_task()` or `TM.delete()`.
+
+```python
+from psytag.managers import TM, delete_task
+
+# Delete the task
+TM.delete(new_task.id)
+# delete_task(new_task.id)
+```
+
+{% hint style="danger" %}
+Please use the delete function with caution. Deleting a task is irreversible, and Psytag will not prompt you for confirmation before proceeding.
 {% endhint %}
-
-```
-   scale   overall   frame_wise
-0  0.1     0.556535    0.01963
-1  0.88    0.610186   0.004407
-2  1.66    0.630256   0.002316
-3  2.44    0.616686   0.001854
-4  3.22    0.597459   0.001127
-5   4.0    0.558529   0.000926
-```
-
-By default, Bitbox computes diversity using signal magnitudes. In this mode, peak frequencies are weighted by their magnitudes—stronger activations contribute more to the overall count. If you prefer to compute diversity in a binary manner, where only the presence or absence of an activation is considered (without weighting by magnitude), you can disable this behavior by setting `magnitude=False`.
-
-```python
-# compute diversity using binary peaks
-diversity_scores = diversity(exp_global, scales=6, magnitude=False)
-```
