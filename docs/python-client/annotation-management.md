@@ -19,13 +19,13 @@ layout:
     visible: true
 ---
 
-# Diversity
+# Annotation Management
 
 <h2 align="center">Expression Diversity</h2>
 
 Bitbox measures the diversity of expression-related activations by computing their entropy. If a person frequently activates only a few specific expression signals while rarely engaging others, the resulting entropy value is low.
 
-This function only accepts [global](facial-expressions.md#expression-related-global-deformations) or [local](facial-expressions.md#localized-expression-units) facial expressions. It computes diversity across all expression coefficients together and produces a single score for the entire video and an additional score representing the average frame-wise entropy.
+This function only accepts [global](getting-started.md#expression-related-global-deformations) or [local](getting-started.md#localized-expression-units) facial expressions. It computes diversity across all expression coefficients together and produces a single score for the entire video and an additional score representing the average frame-wise entropy.
 
 ```python
 from bitbox.expressions import diversity
@@ -37,9 +37,9 @@ exp_global, pose, lands3D = processor.fit(normalize=True)
 diversity_scores = diversity(exp_global, scales=6)
 ```
 
-The computation is performed at multiple temporal scales, similar to the multiscale approach used for [Expressivity](expressivity.md). This allows Bitbox to capture expressions that unfold at different speeds, such as slow, moderate, or rapid changes in facial activity. A temporal scale represents the approximate duration of an expression event. For example, if the scale is 1 second, the algorithm identifies activations (peaks) in the expression signal that last about one second from start to finish. At each scale, a peak detection algorithm finds these activations, and entropy is then calculated based on their frequencies.&#x20;
+The computation is performed at multiple temporal scales, similar to the multiscale approach used for [Expressivity](project-management.md). This allows Bitbox to capture expressions that unfold at different speeds, such as slow, moderate, or rapid changes in facial activity. A temporal scale represents the approximate duration of an expression event. For example, if the scale is 1 second, the algorithm identifies activations (peaks) in the expression signal that last about one second from start to finish. At each scale, a peak detection algorithm finds these activations, and entropy is then calculated based on their frequencies.&#x20;
 
-Refer to the [Expressivity](expressivity.md) section for more details on temporal scales. All options available there—such as multiscale computation, single-scale analysis, and aggregation—are also supported for diversity calculations.
+Refer to the [Expressivity](project-management.md) section for more details on temporal scales. All options available there—such as multiscale computation, single-scale analysis, and aggregation—are also supported for diversity calculations.
 
 ```python
 # analysis using the original signal with no multiscale analysis

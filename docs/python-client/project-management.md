@@ -19,13 +19,13 @@ layout:
     visible: true
 ---
 
-# Expressivity
+# Project Management
 
 <h2 align="center">Overall Expressivity</h2>
 
 Bitbox quantifies overall facial expressivity by analyzing expression-related activations, including their counts, magnitudes, and ranges. These statistics describe how expressive a face is on average. They are also useful as covariates, since certain measures, such as asymmetry, can be influenced by overall expressivity. For example, a wider range of expressions may lead to higher asymmetry magnitudes.
 
-This function only accepts [global](facial-expressions.md#expression-related-global-deformations) or [local](facial-expressions.md#localized-expression-units) facial expressions. It computes expressivity stats for each  expression coefficient independently.&#x20;
+This function only accepts [global](getting-started.md#expression-related-global-deformations) or [local](getting-started.md#localized-expression-units) facial expressions. It computes expressivity stats for each  expression coefficient independently.&#x20;
 
 ```python
 from bitbox.expressions import expressivity
