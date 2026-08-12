@@ -53,6 +53,10 @@ The Event Timeline interface (`mediatimeline`) enables annotators to mark contin
 
 Annotators can create regions by holding Shift and dragging across the interactive audio/video waveform. Once created, regions can be assigned categorical event labels, dragged across the timeline, or resized by dragging their left and right boundary handles.&#x20;
 
+When adding an event timeline question to a project, you can configure several additional properties alongside the standard details, such as event labels, whether you want separate tracks for labels or not, or extra label types.&#x20;
+
+<figure><img src="../.gitbook/assets/media_timeline.png" alt=""><figcaption></figcaption></figure>
+
 Event labels are optional and can be skipped when defining the question.
 
 <figure><img src="../.gitbook/assets/video_nolabels.png" alt=""><figcaption></figcaption></figure>
