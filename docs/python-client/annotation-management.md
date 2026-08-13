@@ -21,62 +21,93 @@ layout:
 
 # Annotation Management
 
-<h2 align="center">Expression Diversity</h2>
+### Annotation Management
 
-Bitbox measures the diversity of expression-related activations by computing their entropy. If a person frequently activates only a few specific expression signals while rarely engaging others, the resulting entropy value is low.
+The Annotation Management module allows project managers and administrators to inspect, retrieve, create, update, and remove annotations programmatically. Unlike other manager modules that return Pydantic model objects, functions in `AnnotationManager` return plain Python dictionaries. This design choice ensures that file metadata, task context, and user details are automatically expanded into human-readable fields alongside the annotation response content.
 
-This function only accepts [global](getting-started.md#expression-related-global-deformations) or [local](getting-started.md#localized-expression-units) facial expressions. It computes diversity across all expression coefficients together and produces a single score for the entire video and an additional score representing the average frame-wise entropy.
+### Listing and Reading Annotations
 
-```python
-from bitbox.expressions import diversity
-
-# estimate global expression coefficients
-exp_global, pose, lands3D = processor.fit(normalize=True)
-
-# compute diversity
-diversity_scores = diversity(exp_global, scales=6)
-```
-
-The computation is performed at multiple temporal scales, similar to the multiscale approach used for [Expressivity](project-management.md). This allows Bitbox to capture expressions that unfold at different speeds, such as slow, moderate, or rapid changes in facial activity. A temporal scale represents the approximate duration of an expression event. For example, if the scale is 1 second, the algorithm identifies activations (peaks) in the expression signal that last about one second from start to finish. At each scale, a peak detection algorithm finds these activations, and entropy is then calculated based on their frequencies.&#x20;
-
-Refer to the [Expressivity](project-management.md) section for more details on temporal scales. All options available there—such as multiscale computation, single-scale analysis, and aggregation—are also supported for diversity calculations.
+To retrieve annotations for an entire project, use `list_annotations_for_project()` or `AM.list_for_project()`. To retrieve annotations for a specific task, use `list_annotations_for_task()` or `AM.list_for_task()`. Calling `list_annotations()` without arguments lists all annotations in the system, which requires system administrator privileges. Any key in the returned dictionary prefixed with `sds_` (such as `sds_subject`, `sds_study`, or `sds_path`) represents metadata automatically populated from the underlying _SDS_ standard. To inspect a single annotation entry by its unique ID, use `read_annotation()`:
 
 ```python
-# analysis using the original signal with no multiscale analysis
-diversity_scores = diversity(exp_global, scales=None)
+from psytag.managers import AM, list_annotations_for_project, read_annotation
 
-# using explicit scales
-diversity_scores = diversity(exp_global, scales=[0.5, 1, 1.5, 2])
+project_id = "650f1a2b3c4d5e6f7a8b9c0a"
 
-# aggregate over scales
-diversity_scores = diversity(exp_global, scales=6, aggregate=True)
+# Fetch all annotations submitted for a project
+project_annotations = AM.list_for_project(project_id)
+# project_annotations = list_annotations_for_project(project_id)
 
-# setting fps
-diversity_scores = diversity(exp_global, scales=6, fps=30)
+for annotation in project_annotations:
+    print(annotation['id'], annotation['task_id'], annotation['user_id'], annotation['content'])
+
+# Read a specific annotation
+if project_annotations:
+    annotation_id = project_annotations[0]['id']
+    specific_annotation = AM.read(annotation_id)
+    # specific_annotation = read_annotation(annotation_id)
+    print(f"Loaded annotation content: {specific_annotation['content']}")
 ```
 
-The output is a Pandas `DataFrame` containing two scores for each temporal scale: overall entropy and average frame-wise entropy. Both scores range from 0 to 1.
+### Creating Annotations
 
-{% hint style="success" %}
-**Overall**: Entropy is calculated using the cumulative frequencies of peaks across the entire signal.\
-**Frame-wise**: Entropy is calculated separately for each frame, and the results are then averaged over time.
+While annotators normally submit responses through the web workspace, project managers can programmatically inject annotations for testing or data migration using `create_annotation()` or `AM.create()`. When constructing an annotation payload:
 
-Note that overall entropy will always be much higher than the entropy calculated per frame or their average. This is because, at any given frame, only a few expression coefficients are typically active, resulting in low entropy values.
+* The `content` dictionary keys must match exact variable names defined in the parent project's question schema.
+* Set `incomplete` to `False` for submitted responses, or `True` for saved drafts.
+* Set `adjudication` or `gold` booleans to designate adjudication or gold-standard reference entries.
+
+```python
+from psytag.managers import AM, create_annotation
+
+annotation_info = {
+    "project_id": "650f1a2b3c4d5e6f7a8b9c0a",
+    "task_id": "650f1a2b3c4d5e6f7a8b9c0d",
+    "incomplete": False,
+    "adjudication": False,
+    "gold": False,
+    "content": {
+        "engagement_level": 4,
+        "behavior_timeline": [
+            {"start": 1.2, "end": 4.5, "label": "Gaze Disruption"}
+        ]
+    }
+}
+
+# Create new annotation entry
+new_annotation = AM.create(annotation_info)
+# new_annotation = create_annotation(annotation_info)
+```
+
+### Updating Annotations
+
+To modify annotation status flags or edit submitted content, pass the annotation ID and updated dictionary fields to `update_annotation()` or `AM.update()`:
+
+```python
+from psytag.managers import AM, update_annotation
+
+# Update incomplete flag or content fields
+AM.update(new_annotation['id'], {
+    "incomplete": False,
+    "content": {
+        "engagement_level": 5
+    }
+})
+# update_annotation(new_annotation['id'], {"incomplete": False})
+```
+
+### Deleting Annotations
+
+To permanently remove an annotation entry from the database, pass its ID to \`delete\_annotation()\` or \`AM.delete()\`:
+
+```python
+from psytag.managers import AM, delete_annotation
+
+# Delete the annotation
+AM.delete(new_annotation['id'])
+# delete_annotation(new_annotation['id'])
+```
+
+{% hint style="danger" %}
+Please use the delete function with caution. Deleting an annotation is irreversible, and Psytag will not prompt you for confirmation before proceeding.
 {% endhint %}
-
-```
-   scale   overall   frame_wise
-0  0.1     0.556535    0.01963
-1  0.88    0.610186   0.004407
-2  1.66    0.630256   0.002316
-3  2.44    0.616686   0.001854
-4  3.22    0.597459   0.001127
-5   4.0    0.558529   0.000926
-```
-
-By default, Bitbox computes diversity using signal magnitudes. In this mode, peak frequencies are weighted by their magnitudes—stronger activations contribute more to the overall count. If you prefer to compute diversity in a binary manner, where only the presence or absence of an activation is considered (without weighting by magnitude), you can disable this behavior by setting `magnitude=False`.
-
-```python
-# compute diversity using binary peaks
-diversity_scores = diversity(exp_global, scales=6, magnitude=False)
-```

@@ -76,6 +76,13 @@ custom_task_info = {
 custom_task = TM.create(custom_task_info)
 ```
 
+#### Task Status
+
+When a task is first created, its status is set to `created`. Once an annotator submits the first annotation for the task, the status changes to `in progress`. When the total number of submitted annotations reaches the required limit configured for the project, Psytag evaluates whether adjudication is necessary:
+
+* If no adjudication is required (or if an adjudicator completes the review), the status is set to `completed`.
+* If the responses conflict according to the project's adjudication rules, the status changes to `adjudicating`.
+
 ### Updating Tasks
 
 To change a task's status, toggle its availability, or update custom instructions, pass the task ID and a dictionary of updated attributes to `update_task()` or `TM.update()`:
