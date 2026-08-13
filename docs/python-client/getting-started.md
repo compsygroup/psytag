@@ -25,6 +25,10 @@ layout:
 
 The Psytag Python client provides programmatic access to the entire Psytag REST API, enabling researchers and developers to automate administrative tasks, batch-process media files, and build custom data pipelines.
 
+```bash
+pip install psytag
+```
+
 ### General Workflow
 
 The typical workflow when working with the Python client consists of the following steps:
