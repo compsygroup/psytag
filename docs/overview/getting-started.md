@@ -96,7 +96,7 @@ You can then select a new question type to add to the project.
 
 <figure><img src="../.gitbook/assets/edit_project_questions_types.png" alt=""><figcaption></figcaption></figure>
 
-Most question types are regular form elements such as radio buttons, checkboxes, and range (likert scale). There are two special question types, tailored for behavioral event annotations: event timeline and event timestamps. See more details in section [Annotation Types](../using-psytag/annotation-types.md).
+Most question types are regular form elements such as radio buttons, checkboxes, and range (likert scale). There are two special question types, tailored for behavioral event annotations: event timeline and event timestamps. See more details in section [Annotation Types](../psytag-fundementals/annotation-types.md).
 
 When you add a new question, enter a variable name, question label, and whether an answer is required. The question label is the text shown to annotators (e.g., "Is the shape in the image a star or a circle?"). Depending on the question type, you may need to provide additional details, such as checkbox options or a rating range for a Likert scale.
 
@@ -140,7 +140,7 @@ When you upload media files, Psytag automatically creates a distinct task for ea
 
 <figure><img src="../.gitbook/assets/edit_project_tasks.png" alt=""><figcaption></figcaption></figure>
 
-For advanced file operations—including alternative upload methods, using metadata, and sharing the same media assets across multiple projects—please refer to the [File Management](../using-psytag/file-management.md) section.
+For advanced file operations—including alternative upload methods, using metadata, and sharing the same media assets across multiple projects—please refer to the [File Management](../psytag-fundementals/file-management.md) section.
 
 ### Annotations
 

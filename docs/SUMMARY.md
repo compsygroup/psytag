@@ -10,15 +10,17 @@
 * [Roadmap](overview/roadmap.md)
 * [About](overview/about.md)
 
-## Using Psytag
+## Psytag Fundementals
 
-* [Main Architecture](using-psytag/main-architecture.md)
-* [Annotation Types](using-psytag/annotation-types.md)
-* [File Management](using-psytag/file-management.md)
+* [Data Model](psytag-fundementals/data-model.md)
+* [Annotation Types](psytag-fundementals/annotation-types.md)
+* [File Management](psytag-fundementals/file-management.md)
 
 ## Python Client
 
-* [Facial Expressions](python-client/facial-expressions.md)
-* [Symmetry](python-client/symmetry.md)
-* [Expressivity](python-client/expressivity.md)
-* [Diversity](python-client/diversity.md)
+* [Getting Started](python-client/getting-started.md)
+* [User Management](python-client/user-management.md)
+* [Project Management](python-client/project-management.md)
+* [File Management](python-client/file-management.md)
+* [Task Management](python-client/task-management.md)
+* [Annotation Management](python-client/annotation-management.md)
