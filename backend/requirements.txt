@@ -1,0 +1,7 @@
+fastapi[standard]
+pymongo
+requests
+python-jose
+ldap3
+librosa
+moviepy

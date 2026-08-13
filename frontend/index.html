@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psytag</title>
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" type="text/css" href='style/bootstrap.min.css'>
+    <link rel="stylesheet" type="text/css" href="style/av.css">
+    <link rel="stylesheet" href="style/bootstrap-icons/bootstrap-icons.css">
+</head>
+<body class="bg-light text-dark">
+    <div id="loginContainer"></div>
+    
+    <div id="topbar">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm border-bottom py-2">
+                <div class="container-fluid px-4">
+                    <!-- Brand -->
+                    <a class="navbar-brand d-flex align-items-center gap-2" href=""><img src="img/compsy_logo.png" alt="Compsy Logo" width="32" height="32"></a>
+                    <span id="nav-brand">PsyTag</span>
+                    
+                    
+                    <button type="button" class="navbar-toggler border-0 shadow-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <!-- Primary Main Menu (Left) -->
+                        <div class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-2" id="topMainMenu">
+                            <button class="nav-link btn btn-link fw-medium text-dark text-start px-2 d-flex align-items-center" id="nav-projects">
+                                <i class="bi bi-collection-play me-2 fs-5 text-primary"></i> Projects
+                            </button>
+                        </div>
+
+                        <!-- Secondary / Admin Menu (Right) -->
+                        <div class="navbar-nav align-items-lg-center gap-2 gap-lg-3">
+                            
+                            <!-- Admin/Manager Menu -->
+                            <div class="nav-item dropdown" id="topAdminMenu">
+                                <button class="nav-link dropdown-toggle btn btn-link fw-medium text-dark px-2 d-flex align-items-center" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-shield-lock me-2 text-warning"></i> Manager Tools
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" aria-labelledby="navbarDropdown" id="nav-admin-menu-list">
+                                    <li>
+                                        <button class="dropdown-item py-2 d-flex align-items-center" id="nav-manage-projects">
+                                            <i class="bi bi-kanban me-3 text-muted fs-5"></i> Project Management
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item py-2 d-flex align-items-center" id="nav-manage-users">
+                                            <i class="bi bi-people me-3 text-muted fs-5"></i> User Management
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <!-- Help Link -->
+                            <a href="https://compsy.gitbook.io/psytag" class="nav-link fw-medium text-dark px-2 d-flex align-items-center" id="nav-help" target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-question-circle me-2 text-info"></i> Help
+                            </a>
+                            
+                            <!-- Vertical Divider (visible only on large screens) -->
+                            <div class="d-none d-lg-block vr mx-2 text-secondary opacity-25"></div>
+                            
+                            <!-- User Menu -->
+                            <div class="nav-item dropdown" id="topUserMenu">
+                                <button class="nav-link dropdown-toggle btn btn-link fw-medium text-dark d-flex align-items-center gap-2 px-2" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center border">
+                                        <i class="bi bi-person-fill text-secondary fs-5"></i>
+                                    </div>
+                                    <span id="userFullName">User</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2">
+                                    <li>
+                                        <button class="dropdown-item text-danger py-2 d-flex align-items-center" id="nav-logout">
+                                            <i class="bi bi-box-arrow-right me-3 fs-5"></i> Logout
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </div>
+
+    <div id="message-area"></div>
+    <div id="content"></div>
+    <div id="statusbar"><div class="statusbar-content">Ready</div></div>
+
+    <script src='js/bootstrap.bundle.min.js'></script>
+    <script src="js/system.js"></script>
+    <script src="js/setup.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/users.js"></script>
+    <script src='js/interfaces/render.js'></script>
+    <script src='js/interfaces/interface_generic.js'></script>
+    <script src='js/interfaces/audio_video.js'></script>
+    <script src='js/interfaces/interface_av.js'></script>
+</body>
+<script src="js/renderer.js"></script>
+</html>

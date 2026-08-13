@@ -1,0 +1,321 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Load the custom font */
+@font-face {
+    font-family: 'Fixedsys Excelsior';
+    src: url('../font/FSEX300.ttf') format('truetype'); 
+    font-style: normal;
+}
+
+.margintop5 { margin-top: 5px; }
+.margintop10 { margin-top: 10px; }
+
+/* ==========================================================================
+   Initial Setup
+   ========================================================================== */
+.compsy-logo {
+    position: relative;
+    height: 50px;
+    vertical-align: middle;
+}
+
+#loginContainer {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 550px;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+#loginError {
+    color: #b42947;
+    margin-top: 10px;
+}
+/* Responsive adjustments for Tablet/Mobile viewport bounds */
+@media (max-width: 768px) {
+    #loginContainer {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .material-card {
+        max-height: none;
+        box-shadow: none;
+    }
+}
+
+.material-card {
+    background: #828282;
+    border-radius: 12px; /* Outer corner radius */
+    border: none;
+    outline: 2px solid #55283C; /* Space between the two lines & Inner Line */
+    outline-offset: -7px; /* Pulls the inner line inside by 6px */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+    max-height: 100vh;
+    padding-left: 15px;
+    padding-right: 15px;
+    overflow-y: auto;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #55283C;
+    margin-bottom: 1rem;
+}
+
+/* Material Floating Field Container */
+.material-group {
+    position: relative;
+    margin-top: 12px;
+}
+
+.material-input {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    height: 48px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    background-color: transparent;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.material-input:focus {
+    border-color: #1d273b;
+    box-shadow: 0 0 0 1px #1d273b;
+    outline: none;
+}
+
+/* Floating Label Positioning */
+/* Fixed label positioned on top border */
+.material-label,
+.fixed-label,
+.select-label {
+    position: absolute;
+    left: 12px;
+    top: -9px !important;
+    background: #ffffff;
+    padding: 0 4px;
+    font-size: 0.75rem !important;
+    color: #1d273b !important;
+    font-weight: 600 !important;
+    pointer-events: none;
+    transition: none !important; /* Disable all animations */
+    z-index: 2;
+}
+
+/* Material Buttons */
+.material-btn {
+    border-radius: 6px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    /* text-transform: uppercase; */
+    font-size: 0.85rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.material-btn:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
+}
+
+.btn-primary.material-btn {
+    background-color: #7c9ec8;
+    border-color: #ffffff;
+}
+
+.btn-primary.material-btn:hover {
+    background-color: #7491b4;
+    border-color: #4d627c;
+}
+
+.btn-outline-primary.material-btn {
+    border-color: #7c9ec8;
+    color: #7c9ec8;
+}
+
+.btn-outline-primary.material-btn:hover {
+    background-color: #7491b4;
+    border-color: #4d627c;
+}
+
+.btn-danger.material-btn {
+    background-color: #b33a54;
+    border-color: #ffffff;
+}
+
+.btn-danger.material-btn:hover {
+    background-color: #98364c;
+    border-color: #4d627c;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #7c9ec8;
+    border-color: #7491b4;
+}
+
+#setupError {
+    color: #b42947;
+}
+
+
+/* ==========================================================================
+   Login & Password Change Logo Frame
+   ========================================================================== */
+.login-logo-frame {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: none;
+    overflow: hidden;
+}
+
+.login-logo-img {
+    width: 70%;
+    height: auto;
+}
+
+
+/* ==========================================================================
+   Main content
+   ========================================================================== */
+#nav-brand { font-family: 'Fixedsys Excelsior', monospace; color: #55283C; letter-spacing: 0.5px; font-weight: normal; font-size: 1.7rem; }
+#topUserMenu .rounded-circle { width: 35px; height: 35px; }
+
+#statusbar { position: fixed; bottom: 0; width: 100%; text-align: right; padding: 5px; }
+
+#content { 
+        padding: 10px; 
+        margin-left: 20px;
+}
+
+#topAdminMenu {
+    display: none; /* Hidden by default, shown for admin users */
+}
+
+/* List Projects */
+.project-card { border: 1px solid #ddd; padding: 10px; margin: 10px;}
+.project-card-info { cursor: pointer; }
+.project-card-info:hover { background: #f0f0f0; }
+
+.project-card-text {
+    font-size: small;
+}
+
+/* Manage Projects */
+.project-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.project-info p {
+    font-size: small;
+    margin: 3px 0;
+}
+
+.project-owner-text {
+    font-style: italic;
+}
+
+.project-creation-text {
+    font-style: italic;
+}
+
+.project-buttons button{
+    margin-left: 3px;
+    padding: 5px 10px;
+}
+
+/* Edit Project */
+.project-edit-form-group {
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.project-edit-form-label {
+    font-weight: bold;
+    width: 250px;
+    vertical-align: middle;
+}
+
+.project-edit-form-label-long {
+    font-weight: bold;
+    width: 300px;
+    vertical-align: middle;
+}
+
+.project-edit-form-input {
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.project-edit-list-group {
+    width: 400px;
+    list-style-type: none;
+    padding: 10px;
+    margin: 0;
+}
+
+.project-edit-list-item {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.project-edit-list-item button {
+    float: right;
+}
+
+.project-edit-select {
+    padding: 5px;
+    font-size: small;
+}
+
+.project-edit-JSON-display {
+    background-color: #f3f3e9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    width: 403px;
+    margin-top: 10px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: small;
+}
+
+.project-edit-rendering-display {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: small;
+}
+
+/* Rendered Questions */
+.rendered-questions-main-table {
+    width: 100%;
+}
+.rendered-questions-main-table td {
+    vertical-align: top;
+    padding: 15px;
+}
+
+
+.adjudication-notice {
+    background-color: #ffeb3b;
+    padding: 5px;
+    border: 1px solid #fbc02d;
+    font-weight: normal;
+    text-align: center;
+}
