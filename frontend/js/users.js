@@ -278,6 +278,7 @@ async function manageUsers(userId=null) {
 
     deleteButton.addEventListener('click', () => {
         if (confirm('Are you sure you want to delete this user?')) {
+            Navigation.setPage(manageUsers, null);  // <-- after deletion, go to create new user page
             const messages = document.getElementById('message-area');
             fetchResponse(`users/${userId}`, "DELETE")
                 .then(response => {

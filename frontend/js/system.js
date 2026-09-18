@@ -332,6 +332,11 @@ async function fetchResponse(endpoint, method="POST", data=null, fileInputOrObj=
         throw new Error("Unauthorized. Logging out.");
     }
 
+    if ('error' in result && result.error !== null) {
+        console.error(`Error from backend (${endpoint}):`, result.error);
+        return null;
+    }
+
     if ('data' in result && result.data !== null) {
         result = result.data;
     }
@@ -343,8 +348,8 @@ async function fetchResponse(endpoint, method="POST", data=null, fileInputOrObj=
 async function attemptLogin(event) {
     event.preventDefault();
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    const username = document.getElementById('login_username').value;
+    const password = document.getElementById('login_password').value;
 
     const result = await fetchResponse('login', 'POST', { username, password });
 
@@ -365,7 +370,7 @@ async function attemptLogin(event) {
 async function attemptPasswordChange(event) {
     event.preventDefault();
 
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('login_username').value;
     const password = document.getElementById('old_password').value;
     const new_password0 = document.getElementById('new_password0').value;
     const new_password1 = document.getElementById('new_password1').value;
@@ -474,8 +479,8 @@ function showLoginPage() {
         return group;
     }
 
-    form.appendChild(createFormGroup("username", "text", "Username", "admin"));
-    form.appendChild(createFormGroup("password", "password", "Password", "password"));
+    form.appendChild(createFormGroup("login_username", "text", "Username", "admin"));
+    form.appendChild(createFormGroup("login_password", "password", "Password", "password"));
 
     // Submit Button
     const submitBtn = document.createElement('button');
@@ -560,7 +565,7 @@ function showPasswordChangePage() {
         return group;
     }
 
-    form.appendChild(createFormGroup("username", "text", "Username", "Username"));
+    form.appendChild(createFormGroup("login_username", "text", "Username", "Username"));
     form.appendChild(createFormGroup("old_password", "password", "Old Password", "Current password"));
     form.appendChild(createFormGroup("new_password0", "password", "New Password", "New password"));
     form.appendChild(createFormGroup("new_password1", "password", "Confirm New Password", "Confirm new password"));
