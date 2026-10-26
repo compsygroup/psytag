@@ -27,7 +27,7 @@ layout:
 
 Psytag is being developed by the Computational Psychology and Psychiatry (**ComPsy**) Group at Children’s Hospital Philadelphia and the University of Pennsylvania. The core development team consists of computational scientists and engineers, psychologists and behavioral scientists, and software developers, who design, develop, implement, test, and document all tools in collaboration.
 
-Richard Lee, Kevin Wang, Nicolas Cloutier, Lisa Yankowitz, Gokul Nair, Birkan Tunc
+Richard Lee, Kevin Wang, Nicolas Cloutier, Birkan Tunc
 
 <figure><img src="../.gitbook/assets/compsy_group_full.png" alt=""><figcaption></figcaption></figure>
 
